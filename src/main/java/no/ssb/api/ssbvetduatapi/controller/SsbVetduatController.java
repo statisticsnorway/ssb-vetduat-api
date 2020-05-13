@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +43,8 @@ public class SsbVetduatController {
     public JsonNode getProductInformation(@RequestHeader HttpHeaders header, @PathVariable String codes, HttpServletResponse resp) {
         AtomicReference<JsonNode> produktInfo = new AtomicReference<>();
 
-        log.info("header: {}", header);
+        Instant start = Instant.now();
+
         if (!authorizeRequest(header)) {
             resp.setStatus(HttpStatus.UNAUTHORIZED.value());
             return objectMapper.createObjectNode().put("resultat", "Autentisering feilet");
@@ -57,12 +60,12 @@ public class SsbVetduatController {
                         produktInfo.set(result);
                     }
                 });
-        log.info("returner {}", produktInfo.get());
+//        log.info("returner {}", produktInfo.get());
+        log.info("ferdig behandlet {} , brukt tid: {}", codes, Duration.between(start, Instant.now()).toMillis());
         return produktInfo.get();
     }
 
     private boolean authorizeRequest(HttpHeaders header) {
-        log.info("header-api-key: {} og acceptedApiKeys: {}", header.get(HEADER_APIKEY), acceptedApiKeys);
         return header.get(HEADER_APIKEY) != null && acceptedApiKeys.contains(Objects.requireNonNull(header.get(HEADER_APIKEY)).get(0));
     }
 }

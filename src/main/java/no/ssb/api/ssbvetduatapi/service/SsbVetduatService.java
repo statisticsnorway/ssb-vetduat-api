@@ -25,7 +25,7 @@ public class SsbVetduatService {
     public CompletableFuture<JsonNode> productInformationForCodes(String codes) {
         CompletableFuture<JsonNode> future = new CompletableFuture<>();
         ArrayNode result = objectMapper.createArrayNode();
-        Arrays.stream(codes.split(",")).forEach(code -> {
+        Arrays.stream(codes.split(",")).parallel().forEach(code -> {
             try {
                 String codeInfo = vetduatRestRepository.callVetDuAt(code);
 //                log.info("code: {}, codeInfor: {}", code, codeInfo);
