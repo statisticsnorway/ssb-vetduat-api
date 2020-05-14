@@ -15,9 +15,10 @@
 	<description>Rest-api for å kalle vetduat.no</description>
 
 	<properties>
-		<java.version>14</java.version>
+		<java.version>11</java.version>
 		<swagger.core.version>2.5.0</swagger.core.version>
 		<org.json.version>20190722</org.json.version>
+		<axure.adal4j.version>1.2.0</axure.adal4j.version>
 	</properties>
 
 	<dependencies>
@@ -72,7 +73,7 @@
 		<dependency>
 			<groupId>com.microsoft.azure</groupId>
 			<artifactId>adal4j</artifactId>
-			<version>1.2.0</version>
+			<version>${axure.adal4j.version}</version>
 		</dependency>
 
 	</dependencies>
