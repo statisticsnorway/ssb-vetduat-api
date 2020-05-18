@@ -2,6 +2,7 @@ package no.ssb.api.ssbvetduatapi.repository;
 
 import com.microsoft.aad.adal4j.AuthenticationContext;
 import com.microsoft.aad.adal4j.ClientCredential;
+import no.ssb.api.ssbvetduatapi.util.ResultStrings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,20 +57,17 @@ public class VetduatRestRepository {
         try {
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            log.info("respons: {}, status {}", response.body(), response.statusCode());
             if (response.statusCode() == HttpStatus.OK.value()) {
-                result = response.body().length() > 2 ?
-                        response.body() : emptyResult(Long.parseLong(code), -1, -1, "Finner ikke hos vetduat.");
+                result = response.body();
             } else {
-                result = emptyResult(Long.parseLong(code), -1, -1, "Noe feilet - status " + response.statusCode());
+                result = ResultStrings.emptyResult(Long.parseLong(code), -1, -1, "Noe feilet - status " + response.statusCode());
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             log.error("something wrong in calling vetduat: {}", e.getMessage());
-            result = emptyResult(Integer.parseInt(code), -1, -1, "Noe feilet - " + e.getMessage());
-        } catch (InterruptedException e) {
-            log.error("interrupted exception calling vetduat: {}", e.getMessage());
-            result = emptyResult(Integer.parseInt(code), -1, -1, "Noe feilet -  " + e.getMessage());
+            result = ResultStrings.emptyResult(Integer.parseInt(code), "Noe feilet - " + e.getMessage());
         }
-//        log.info("result: {}", result);
+        log.info("result: {}", result);
 
         return result;
     }
@@ -102,40 +100,4 @@ public class VetduatRestRepository {
 //        requestHeaderKeys.forEach(k -> log.info(k + ": " + request.headers().allValues(k)));
 //    }
 
-    private String emptyResult(long gtin, int epdNr, int gln, String message) {
-        return "[{" +
-                "\"epdNr\":" + epdNr + ", " +
-                "\"produktnavn\":\"Finner ikke hos vetduat\", " +
-                "\"gtin\":" + gtin + ", " +
-                "\"gln\":" + gln +
-                "}]";
-    }
-
-//    private String hardkodet() {
-//        return "[{" +
-//                "\"epdNr\":1257385," +
-//                "\"produktnavn\":\"Linfrø 500g Harlem Food\", " +
-//                "\"opprinnelsesland\":\"Norge\", " +
-//                "\"gtin\":7027510202543, " +
-//                "\"gln\":7080000722990, " +
-//                "\"firmaNavn\":\"HARLEM FOOD AS\", " +
-//                "\"minimumsTemperaturCelcius\":10, " +
-//                "\"maksimumsTemperaturCelcius\":18, " +
-//                "\"ingredienser\":\"linfrø\", " +
-//                "\"merkeordninger\":[], " +
-//                "\"deklarasjoner\":[ " +
-//                "{" +
-//                "\"deklarasjon\":\"Energi kj pr 100 g/ml\", " +
-//                "\"verdi\":\"1890.000\" " +
-//                "}," +
-//                "{" +
-//                "\"deklarasjon\":\"Energi kcal pr 100 g/ml\", " +
-//                "\"verdi\":\"450.000\" " +
-//                "}," +
-//                "{" +
-//                "\"deklarasjon\":\"Fett (totalt) pr 100 g/ml\", " +
-//                "\"verdi\":\"40.000\" " +
-//                "}" +
-//                "}]";
-//    }
 }

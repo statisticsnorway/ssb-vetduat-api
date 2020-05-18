@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import no.ssb.api.ssbvetduatapi.repository.VetduatRestRepository;
+import no.ssb.api.ssbvetduatapi.util.ResultStrings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,19 @@ public class SsbVetduatService {
     @Autowired
     VetduatRestRepository vetduatRestRepository;
 
+    final String emptyRestResult = "[]";
+
     public CompletableFuture<JsonNode> productInformationForCodes(String codes) {
         CompletableFuture<JsonNode> future = new CompletableFuture<>();
         ArrayNode result = objectMapper.createArrayNode();
         Arrays.stream(codes.split(",")).parallel().forEach(code -> {
             try {
                 String codeInfo = vetduatRestRepository.callVetDuAt(code);
-//                log.info("code: {}, codeInfor: {}", code, codeInfo);
-                JsonNode node = objectMapper.readTree(codeInfo);
+                log.info("code: {}, codeInfor: {}", code, codeInfo);
+                JsonNode node = objectMapper.readTree(
+                        codeInfo.equals(emptyRestResult) ?
+                                ResultStrings.emptyResult(Long.parseLong(code)) :
+                                codeInfo);
                 if (node.isArray()) {
                     node.forEach(result::add);
                 } else {
