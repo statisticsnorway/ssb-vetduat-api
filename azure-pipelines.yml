@@ -72,7 +72,7 @@ jobs:
         inputs:
           mavenPomFile: 'pom.xml'
           goals: 'sonar:sonar'
-          options: '-X -Dsonar.host.url=$(SONAR_HOST) -Dsonar.login=$(SONAR_TOKEN) sonar:sonar -P ssb-bip,coverage -Dmaven.javadoc.skip=true --batch-mode '
+          options: '-X -Dsonar.host.url=$(SONAR_HOST2) -Dsonar.login=$(SONAR_TOKEN) sonar:sonar -P ssb-bip,coverage -Dmaven.javadoc.skip=true --batch-mode '
           publishJUnitResults: false
           testResultsFiles: '**/TEST-*.xml'
           javaHomeOption: 'JDKVersion'
