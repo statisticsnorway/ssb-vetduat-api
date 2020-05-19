@@ -16,7 +16,7 @@ pool:
 variables:
   # Variables defined in Pipelines->Library->Variable Groups in your project in
   # Azure Pipelines
-  - group: Hemmeligheter
+  #- group: Hemmeligheter
   # Variables defined here
   - name: fullSha
     value: '$(Build.SourceVersion)'
