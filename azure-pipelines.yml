@@ -11,10 +11,26 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+# Variables global to this pipeline
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables
+variables:
+  # Variables defined in Pipelines->Library->Variable Groups in your project in
+  # Azure Pipelines
+  - group: Hemmeligheter
+  # Variables defined here
+  - name: fullSha
+    value: '$(Build.SourceVersion)'
+  - name: repoName
+    value: 'prod-bip/ssb/forbruk/ssb-vetduat-api'
+  - name:  MAVEN_CACHE_FOLDER
+    value: $(Pipeline.Workspace)/.m2/repository
+  - name: MAVEN_OPTS
+    value: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+
 # Job which runs mvn test and verify, Sonar Analysis (if branch is master), mvn install,
 # builds Docker image, pushes this to GCR and checks for any image vulnerabilities
 jobs:
-  - job: buildTestDockerBuildDockerPush
+  - job: buildTestBuildPush
     displayName: 'Test/build app'
     # Job condition: Run these jobs on any branch, but not on tags
     condition: not(startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
@@ -83,4 +99,15 @@ jobs:
           testResultsFiles: '**/TEST-*.xml'
           goals: 'deploy'
           options: '-DskipTests=true -Dmaven.javadoc.skip=true -P ssb-bip --batch-mode'
-
+---
+kind: secret
+name: sonar_host
+get:
+  path: drone-sonarqube-configuration
+  name: url
+---
+kind: secret
+name: sonar_token
+get:
+  path: drone-sonarqube-configuration
+  name: token
