@@ -17,7 +17,6 @@
 	<properties>
 		<java.version>11</java.version>
 		<swagger.core.version>2.5.0</swagger.core.version>
-		<org.json.version>20190722</org.json.version>
 		<axure.adal4j.version>1.2.0</axure.adal4j.version>
 	</properties>
 
@@ -62,12 +61,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>${org.json.version}</version>
 		</dependency>
 
 		<dependency>
