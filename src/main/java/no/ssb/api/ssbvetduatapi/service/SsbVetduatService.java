@@ -31,7 +31,7 @@ public class SsbVetduatService {
         Arrays.stream(codes.split(",")).parallel().forEach(code -> {
             try {
                 String codeInfo = vetduatRestRepository.callVetDuAt(code);
-                log.info("code: {}, codeInfor: {}", code, codeInfo);
+//                log.info("code: {}, codeInfor: {}", code, codeInfo);
                 JsonNode node = objectMapper.readTree(
                         codeInfo.equals(emptyRestResult) ?
                                 ResultStrings.emptyResult(Long.parseLong(code)) :
