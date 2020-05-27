@@ -40,9 +40,9 @@ public class SsbVetduatServiceTest {
     @Test
     void testSsbVetduatService_oneCode_notExists() throws Exception {
         JsonNode expected = objectMapper.readTree(TestResultStrings.singleNotExistsResult);
-        when(vetduatRestRepository.callVetDuAt(anyString())).thenReturn(notExistsVetduatResult);
+        when(vetduatRestRepository.callVetDuAt(anyString(), anyString())).thenReturn(notExistsVetduatResult);
 
-        ssbVetduatService.productInformationForCodes("2").thenAccept(result ->
+        ssbVetduatService.productInformationForCodes("gtin","2").thenAccept(result ->
                         resultNode.set(result));
 
         assertEquals(expected, resultNode.get());
@@ -51,9 +51,9 @@ public class SsbVetduatServiceTest {
     @Test
     void testSsbVetduatService_oneCode_exists() throws Exception {
         JsonNode expected = objectMapper.readTree(TestResultStrings.singleExistsResult);
-        when(vetduatRestRepository.callVetDuAt(anyString())).thenReturn(TestResultStrings.singleExistsResult);
+        when(vetduatRestRepository.callVetDuAt(anyString(), anyString())).thenReturn(TestResultStrings.singleExistsResult);
 
-        ssbVetduatService.productInformationForCodes("2").thenAccept(result ->
+        ssbVetduatService.productInformationForCodes("gtin","2").thenAccept(result ->
                 resultNode.set(result));
         JsonNode actual = resultNode.get();
 
@@ -64,9 +64,9 @@ public class SsbVetduatServiceTest {
     @Test
     void testSsbVetduatService_multipleCodes_exists() throws Exception {
         JsonNode expected = objectMapper.readTree(TestResultStrings.multipleExistsResult);
-        when(vetduatRestRepository.callVetDuAt(anyString())).thenReturn(TestResultStrings.singleExistsResult);
+        when(vetduatRestRepository.callVetDuAt(anyString(), anyString())).thenReturn(TestResultStrings.singleExistsResult);
 
-        ssbVetduatService.productInformationForCodes("2,3").thenAccept(result ->
+        ssbVetduatService.productInformationForCodes("gtin","2,3").thenAccept(result ->
                 resultNode.set(result));
 
         JsonNode actual = resultNode.get();

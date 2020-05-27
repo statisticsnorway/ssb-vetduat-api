@@ -43,9 +43,10 @@ public class VetduatRestRepository {
 
     private int timeoutInSeconds = 10;
 
-    public String callVetDuAt(String code) {
+    public String callVetDuAt(String codeType, String code) {
         String result;
-        String body = "{ \"gtin\" : " + code + " }";
+        String body = "{ \"" + codeType + "\" : " + code + " }";
+        log.info("call with body {}", body);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(vetduatUrl+vetduatUsersearchEndpoint))
@@ -61,11 +62,11 @@ public class VetduatRestRepository {
             if (response.statusCode() == HttpStatus.OK.value()) {
                 result = response.body();
             } else {
-                result = ResultStrings.emptyResult(Long.parseLong(code), -1, -1, "Noe feilet - status " + response.statusCode());
+                result = ResultStrings.emptyResult(codeType, code, "Noe feilet - status " + response.statusCode());
             }
         } catch (IOException | InterruptedException e) {
             log.error("something wrong in calling vetduat: {}", e.getMessage());
-            result = ResultStrings.emptyResult(Integer.parseInt(code), "Noe feilet - " + e.getMessage());
+            result = ResultStrings.emptyResult(codeType, code, "Noe feilet - " + e.getMessage());
         }
         log.info("result: {}", result);
 

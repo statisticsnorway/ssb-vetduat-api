@@ -1,7 +1,7 @@
 package no.ssb.api.ssbvetduatapi.util;
 
 public class ResultStrings {
-    public static String emptyResult(long gtin, int epdNr, int gln, String message) {
+    public static String emptyResult(long gtin, long epdNr, long gln, String message) {
         return "[{" +
                 "\"epdNr\":" + epdNr + ", " +
                 "\"produktnavn\":\"" + message + "\", " +
@@ -10,12 +10,12 @@ public class ResultStrings {
                 "}]";
     }
 
-    public static String emptyResult(long gtin) {
-        return emptyResult(gtin, -1, -1, "Finner ikke hos vetduat");
-    }
-
-    public static String emptyResult(long gtin, String message) {
-        return emptyResult(gtin, -1, -1, message);
+    public static String emptyResult(String codeType, String code, String message) {
+        return emptyResult(
+                codeType.equalsIgnoreCase("gtin") ? Long.parseLong(code) : -1,
+                codeType.equalsIgnoreCase("epdNr") ? Long.parseLong(code) : -1,
+                codeType.equalsIgnoreCase("gln") ? Long.parseLong(code) : -1,
+                message);
     }
 
     public static final String singleExistsResult = "[\n" +

@@ -25,16 +25,16 @@ public class SsbVetduatService {
 
     final String emptyRestResult = "[]";
 
-    public CompletableFuture<JsonNode> productInformationForCodes(String codes) {
+    public CompletableFuture<JsonNode> productInformationForCodes(String codeType, String codes) {
         CompletableFuture<JsonNode> future = new CompletableFuture<>();
         ArrayNode result = objectMapper.createArrayNode();
         Arrays.stream(codes.split(",")).parallel().forEach(code -> {
             try {
-                String codeInfo = vetduatRestRepository.callVetDuAt(code);
+                String codeInfo = vetduatRestRepository.callVetDuAt(codeType, code);
 //                log.info("code: {}, codeInfor: {}", code, codeInfo);
                 JsonNode node = objectMapper.readTree(
                         codeInfo.equals(emptyRestResult) ?
-                                ResultStrings.emptyResult(Long.parseLong(code)) :
+                                ResultStrings.emptyResult(codeType, code,"Finner ikke hos vetduat") :
                                 codeInfo);
                 if (node.isArray()) {
                     node.forEach(result::add);

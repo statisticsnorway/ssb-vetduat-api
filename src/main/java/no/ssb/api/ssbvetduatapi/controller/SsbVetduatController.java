@@ -32,6 +32,9 @@ public class SsbVetduatController {
     @Value("${api-keys}")
     private List<String> acceptedApiKeys;
 
+    @Value("${vetduat.default.codeType}")
+    private String defaultCodeType;
+
     @Autowired
     SsbVetduatService ssbVetduatService;
 
@@ -40,7 +43,20 @@ public class SsbVetduatController {
     @ApiOperation(value = "Hent produktinformasjon fra vetduat.no")
     @GetMapping("/produktinfo/{codes}")
     @ResponseBody
-    public JsonNode getProductInformation(@RequestHeader HttpHeaders header, @PathVariable String codes, HttpServletResponse resp) {
+    public JsonNode getProductInformation(@RequestHeader HttpHeaders header,
+                                          @PathVariable String codes, HttpServletResponse resp) {
+        return getProductInformationForCodes(header, defaultCodeType, codes, resp);
+    }
+
+    @ApiOperation(value = "Hent produktinformasjon fra vetduat.no")
+    @GetMapping("/produktinfo/{codeType}/{codes}")
+    @ResponseBody
+    public JsonNode getProductInformation(@RequestHeader HttpHeaders header, @PathVariable String codeType,
+                                          @PathVariable String codes, HttpServletResponse resp) {
+        return getProductInformationForCodes(header, codeType, codes, resp);
+    }
+
+    private JsonNode getProductInformationForCodes(@RequestHeader HttpHeaders header, @PathVariable String codeType, @PathVariable String codes, HttpServletResponse resp) {
         AtomicReference<JsonNode> produktInfo = new AtomicReference<>();
 
         Instant start = Instant.now();
@@ -50,7 +66,7 @@ public class SsbVetduatController {
             return objectMapper.createObjectNode().put("resultat", "Autentisering feilet");
         }
 
-        ssbVetduatService.productInformationForCodes(codes)
+        ssbVetduatService.productInformationForCodes(codeType, codes)
                 .orTimeout(10, TimeUnit.SECONDS)
                 .thenAccept(result -> {
                     if (result == null || result.isMissingNode()) {
