@@ -31,11 +31,12 @@ public class SsbVetduatService {
         Arrays.stream(codes.split(",")).parallel().forEach(code -> {
             try {
                 String codeInfo = vetduatRestRepository.callVetDuAt(codeType, code);
-//                log.info("code: {}, codeInfor: {}", code, codeInfo);
+                log.info("code: {}, codeInfor: {}", code, codeInfo);
                 JsonNode node = objectMapper.readTree(
                         codeInfo.equals(emptyRestResult) ?
                                 ResultStrings.emptyResult(codeType, code,"Finner ikke hos vetduat") :
                                 codeInfo);
+                log.info("node: {}", node);
                 if (node.isArray()) {
                     node.forEach(result::add);
                 } else {
@@ -45,7 +46,7 @@ public class SsbVetduatService {
                 e.printStackTrace();
             }
         });
-//        log.info("return result: {}", result);
+        log.info("return result: {}", result);
         future.complete(result);
         return future;
     }

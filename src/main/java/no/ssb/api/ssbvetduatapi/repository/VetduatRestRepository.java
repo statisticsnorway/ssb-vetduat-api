@@ -48,6 +48,10 @@ public class VetduatRestRepository {
         String body = "{ \"" + codeType + "\" : " + code + " }";
         log.info("call with body {}", body);
 
+        String bearerToken = getAccessToken();
+        if (bearerToken == null || bearerToken.length() == 0 ) {
+            return ResultStrings.emptyResult(codeType, code, "Noe feilet ved henting av accessToken");
+        }
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(vetduatUrl+vetduatUsersearchEndpoint))
                 .header("Content-Type", "application/json")
@@ -85,7 +89,7 @@ public class VetduatRestRepository {
                     new ClientCredential(applicationId, clientSecret);
             tokenResult = authContext.acquireToken(authResource, clientCredential, null).get().getAccessToken();
         } catch (MalformedURLException | InterruptedException | ExecutionException e) {
-            log.error(e.getMessage());
+            log.error("Feil ved henting av accessToken: {}", e.getMessage());
         }
         // ADAL includes an in memory cache, so this call will only send a message to the server if the cached token is expired.
 //        log.info("tokenResult: {}", tokenResult);
