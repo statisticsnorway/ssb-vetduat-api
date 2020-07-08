@@ -29,18 +29,6 @@ public class VetduatRestRepository {
     @Value("${vetduat.endpoint.usersearch}")
     private String vetduatUsersearchEndpoint;
 
-//    @Value("${vetduat.auth.resource}")
-//    private String authResource;
-//
-//    @Value("${vetduat.auth.authority}")
-//    private String authAuthority;
-//
-//    @Value("${vetduat.auth.application.id}")
-//    private String applicationId;
-//
-//    @Value("${vetduat.auth.client.secret}")
-//    private String clientSecret;
-
     private int timeoutInSeconds = 10;
 
     public String callVetDuAt(String codeType, String code, String accessToken) {
@@ -78,25 +66,6 @@ public class VetduatRestRepository {
         return result;
     }
 
-
-//    private String getAccessToken() {
-//        String tokenResult ="";
-//        final ExecutorService executorService = Executors.newSingleThreadExecutor();
-//
-//        try {
-//            AuthenticationContext authContext =
-//                    new AuthenticationContext(authAuthority, true, executorService);
-//            ClientCredential clientCredential =
-//                    new ClientCredential(applicationId, clientSecret);
-//            tokenResult = authContext.acquireToken(authResource, clientCredential, null).get().getAccessToken();
-//        } catch (MalformedURLException | InterruptedException | ExecutionException e) {
-//            log.error("Feil ved henting av accessToken: {}", e.getMessage());
-//        }
-//        // ADAL includes an in memory cache, so this call will only send a message to the server if the cached token is expired.
-////        log.info("tokenResult: {}", tokenResult);
-//        return tokenResult;
-//
-//    }
 
 //    private void logRequest(HttpRequest request) {
 //        log.info("request: {}", request.toString());

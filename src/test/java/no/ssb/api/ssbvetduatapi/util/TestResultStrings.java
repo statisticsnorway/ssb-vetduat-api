@@ -195,6 +195,12 @@ public class TestResultStrings {
             "  }\n" +
             "]";
 
+    public static String errorResultGtin23NoAccessToken =
+            "[[{" +
+                    "\"codeType\":\"gtin\", " +
+                    "\"code\":\"2,3\", " +
+                    "\"message\":\"Noe feilet ved henting av accessToken\"" +
+                    "}]]";
 
 
 }

@@ -18,6 +18,14 @@ public class ResultStrings {
                 message);
     }
 
+    public static String errorResult(String codeType, String code, String message) {
+        return "[{" +
+                "\"codeType\":\"" + codeType + "\", " +
+                "\"code\":\"" + code + "\", " +
+                "\"message\":\"" + message +"\"" +
+                "}]";
+    }
+
     public static final String singleExistsResult = "[\n" +
             "  {\n" +
             "    \"epdNr\": 4608006,\n" +
